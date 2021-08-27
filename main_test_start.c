@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/27 06:25:38 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/27 06:38:28 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,15 @@ int	main(int ac, char **av, char **envp)
 
 	}
 	stc.first = stc.first->next;
-	if (pid != 0)
+	pid2 = fork();
+	if (pid2 == -1) // error pipe;
 	{
-		waitpid(pid, NULL, 0); // grace a waitpid le ls ce fait avant le bite
+		printf("error forking\n");
+		return (2);
+	}
+
+	if (pid2 == 0)
+	{
 
 		write(2, "processus pere\n", 15); 
 		write(2, stc.first->bin, ft_strlen(stc.first->bin)); 
@@ -73,6 +79,11 @@ int	main(int ac, char **av, char **envp)
 		execve(stc.first->bin, stc.first->arg, envp);
 		printf("bad path for execve 2\n");
 	}
+	close(fd[0]);
+	close(fd[1]);
+	close(stc.fd_file1);
+	close(stc.fd_file2);
+	waitpid(pid, NULL, 0); // grace a waitpid le ls ce fait avant le bite
 	write(1, "bite\n", 5);
 	return (0);
 }
