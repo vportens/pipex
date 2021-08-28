@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/08/23 20:56:05 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/27 06:07:26 by viporten         ###   ########.fr       */
+/*   Created: 2021/08/27 09:39:40 by viporten          #+#    #+#             */
+/*   Updated: 2021/08/28 22:48:15 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef	PIPEX_H
+#ifndef PIPEX_H
 # define PIPEX_H
 
 # include <sys/wait.h>
@@ -20,16 +20,16 @@
 # include <stdlib.h>
 # include "libft/includes/libft.h"
 
-typedef struct s_cmd t_cmd;
-typedef struct s_pipe t_pipe;
+typedef struct s_cmd	t_cmd;
+typedef struct s_pipe	t_pipe;
 
 struct		s_cmd
 {
 	char	*cmd;
 	char	*bin;
 	char	**arg;
-	
-
+	int		fd_in;
+	int		fd_out;
 	t_cmd	*next;
 };
 
@@ -39,13 +39,17 @@ struct		s_pipe
 	t_cmd	*first;
 	int		fd_file1;
 	int		fd_file2;
+	int		**nfd;
+	int		ac;
 };
 
 char	*found_path_env(char **envp);
 char	**split_path(char *str);
 char	*path_cmd(char **path, char *str);
-void	init_stc(t_pipe *stc, int ac, char **av, char **envp);
-void	init_path(t_pipe *stc, char **envp);
+int		init_stc(t_pipe *stc, int ac, char **av, char **envp);
+int		init_path(t_pipe *stc, char **envp);
 int		check_bin(t_pipe *stc);
-void	init_fd_file(t_pipe *stc, int ac, char **av);
+int		init_fd_file(t_pipe *stc, int ac, char **av);
+int		init_multi_fd(t_pipe *stc, int ac, char **av);
+void	close_fd(t_cmd *first);
 #endif

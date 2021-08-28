@@ -6,84 +6,109 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/27 06:38:28 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/28 22:49:26 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
+int	clean(t_pipe *stc, int ret)
+{
+	int		i;
+	t_cmd	*tmp;
+
+	i = 0;
+	tmp = NULL;
+	if (stc->path)	
+	{
+		while (stc->path[i])
+		{
+			free(stc->path[i]);
+			i++;
+		}
+		free(stc->path);
+	}
+	if (stc->nfd)
+	{
+		i = 0;
+		while (i < stc->ac - 4)
+		{
+			free(stc->nfd[i]);
+			i++;
+		}
+		free(stc->nfd);
+	}
+	while (stc->first)
+	{
+		stc->first->next = tmp;	
+		if (stc->first->bin)
+			free(stc->first->bin);
+		i = 0;
+		if (stc->first->arg)
+		{
+			while (stc->first->arg[i])
+			{
+				free(stc->first->arg[i]);
+				i++;
+			}
+			free(stc->first->arg);
+		}
+		free(stc->first);
+		stc->first = tmp;
+	}
+	return (0);
+}
+
+
+int	multi_fork(t_pipe stc, int ac, char **envp)
+{
+	pid_t	*pid;
+	int		i;
+	t_cmd	*tmp;
+
+	tmp = stc.first;
+	i = 0;
+	stc.ac = ac;
+	pid = malloc(sizeof(pid_t) * (ac - 3));
+	if (pid == NULL)
+		return (clean(&stc, 20));
+	while (i < ac - 3)
+	{
+		pid[i] = fork();
+		if (pid[i] == -1)
+			return (clean(&stc, 40));
+		if (pid[i] == 0)
+		{
+			dup2(stc.first->fd_in, STDIN_FILENO);
+			dup2(stc.first->fd_out, STDOUT_FILENO);
+			close_fd(tmp);
+			execve(stc.first->bin, stc.first->arg, envp);
+		}
+		stc.first = stc.first->next;
+		i++;
+	}
+	close_fd(tmp);
+}
+
 int	main(int ac, char **av, char **envp)
 {
-	pid_t	pid;
 	t_pipe	stc;
-	pid_t	pid2;
-	int		fd[2]; // fd[0] == read | fd[1] == write;
+	int		ret;
 
 	(void)ac;
 	stc.first = NULL;
-	init_stc(&stc, ac, av, envp);
+	ret = init_stc(&stc, ac, av, envp);
+	if (ret != 0)
+		return (clean(&stc, ret));
 	if (check_bin(&stc) == -1)
-	{
-		printf("bad commande line\n");
 		return (0);
-	}
-	init_fd_file(&stc, ac, av);
+	if (init_fd_file(&stc, ac, av) != 0)
+		return (clean(&stc, 40));
+	if (init_multi_fd(&stc, ac, av) != 0)
+		return (clean(&stc, 20));
 	if (stc.fd_file1 < 0 || stc.fd_file2 < 0)
-		return (0);
-	if (pipe(fd) == -1) // error fork;
-	{
-		printf("error opening pipe\n");
-		return (1);
-	}
-
-	pid = fork();
-	if (pid == -1) // error pipe;
-	{
-		printf("error forking\n");
-		return (2);
-	}
-	if (pid == 0)
-	{
-		write(2, "processus fils\n", 15); 
-		write(2, stc.first->bin, ft_strlen(stc.first->bin)); 
-		write(2, "\n", 1);
-		dup2(stc.fd_file1, STDIN_FILENO);
-		dup2(fd[1], STDOUT_FILENO);
-		close(stc.fd_file1);
-		close(fd[0]);
-		close(fd[1]);
-		execve(stc.first->bin, stc.first->arg, envp);
-		write(2, "bad path for execve\n", 5);
-
-	}
-	stc.first = stc.first->next;
-	pid2 = fork();
-	if (pid2 == -1) // error pipe;
-	{
-		printf("error forking\n");
-		return (2);
-	}
-
-	if (pid2 == 0)
-	{
-
-		write(2, "processus pere\n", 15); 
-		write(2, stc.first->bin, ft_strlen(stc.first->bin)); 
-		write(2, "\n", 1);
-
-		dup2(fd[0], STDIN_FILENO);
-		dup2(stc.fd_file2, STDOUT_FILENO);
-		close(stc.fd_file2);
-		close(fd[0]);
-		close(fd[1]);
-		execve(stc.first->bin, stc.first->arg, envp);
-		printf("bad path for execve 2\n");
-	}
-	close(fd[0]);
-	close(fd[1]);
-	close(stc.fd_file1);
-	close(stc.fd_file2);
-	waitpid(pid, NULL, 0); // grace a waitpid le ls ce fait avant le bite
-	write(1, "bite\n", 5);
+		return (clean(&stc, 30));
+	multi_fork(stc, ac, envp);
+	clean(&stc, 30);
 	return (0);
 }
