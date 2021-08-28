@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/28 22:49:26 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/29 00:25:54 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,6 @@ int	main(int ac, char **av, char **envp)
 	if (stc.fd_file1 < 0 || stc.fd_file2 < 0)
 		return (clean(&stc, 30));
 	multi_fork(stc, ac, envp);
-	clean(&stc, 30);
+//	clean(&stc, 30);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 22:17:31 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/28 22:42:24 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/28 23:07:06 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ int	init_stc(t_pipe *stc, int ac, char **av, char **envp)
 	while (i < ac - 1)
 	{
 		tmp = malloc(sizeof(t_cmd));
-//		if (tmp == NULL)
-//			return (20);
+		if (tmp == NULL)
+			return (20);
 		if (stc->first == NULL)
 			stc->first = tmp;
 		else
