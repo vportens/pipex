@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 00:25:54 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/29 00:59:00 by viporten         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	clean(t_pipe *stc, int ret)
 	while (stc->first)
 	{
 		stc->first->next = tmp;	
-		if (stc->first->bin)
+		if (stc->first->bin && stc->first->bin != stc->first->arg[0])
 			free(stc->first->bin);
 		i = 0;
 		if (stc->first->arg)
@@ -56,7 +56,7 @@ int	clean(t_pipe *stc, int ret)
 		free(stc->first);
 		stc->first = tmp;
 	}
-	return (0);
+	return (ret);
 }
 
 
@@ -88,6 +88,7 @@ int	multi_fork(t_pipe stc, int ac, char **envp)
 		i++;
 	}
 	close_fd(tmp);
+	return (0);
 }
 
 int	main(int ac, char **av, char **envp)
@@ -109,6 +110,6 @@ int	main(int ac, char **av, char **envp)
 	if (stc.fd_file1 < 0 || stc.fd_file2 < 0)
 		return (clean(&stc, 30));
 	multi_fork(stc, ac, envp);
-//	clean(&stc, 30);
+	clean(&stc, 30);
 	return (0);
 }
