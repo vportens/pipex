@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 22:17:31 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 07:03:30 by user42           ###   ########.fr       */
+/*   Updated: 2021/08/29 07:17:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,14 @@ int	init_multi_fd(t_pipe *stc, int ac, char **av)
 
 int	init_fd_file(t_pipe *stc, int ac, char **av)
 {
-	stc->fd_file1 = open(av[1], O_RDONLY | O_CREAT);
+	stc->fd_file1 = open(av[1], O_RDONLY);
 	stc->fd_file2 = open(av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
-	if (stc->fd_file1 < 0 || stc->fd_file2 < 0)
-		return (30);
+	if (stc->fd_file1 < 0)
+	{
+		write(2, "pipex: aucun fichier ou dossier de ce type: ", ft_strlen("pipex: aucun fichier ou dossier de ce type: "));
+		write(2, av[1], ft_strlen(av[1]));
+		write(2, "\n", 1);
+	}
 	return (0);
 }
 

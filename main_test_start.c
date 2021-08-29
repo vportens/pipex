@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 07:04:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/08/29 07:26:01 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,12 @@ void	ft_execve(t_pipe stc, t_cmd *tmp, char **envp)
 	dup2(stc.first->fd_out, STDOUT_FILENO);
 	close_fd(tmp);
 	write(2, "la\n", 3);
+	if (stc.first->fd_in < 0)
+		exit(1);
 	execve(stc.first->bin, stc.first->arg, envp);
+	write(2, "pipex: command not found: ", ft_strlen("pipex: command not found: "));
+	write(2, stc.first->cmd, ft_strlen(stc.first->cmd));
+	write(2, "\n", 1);
 	write(2, "test\n", 5);
 	exit(1);
 }
@@ -126,8 +131,8 @@ int	main(int ac, char **av, char **envp)
 	if (init_multi_fd(&stc, ac, av) != 0)
 		return (clean(&stc, 20, 0));
 	write(2, "end init_nfd\n", 13);
-	if (stc.fd_file1 < 0 || stc.fd_file2 < 0)
-		return (clean(&stc, 30, 0));
+//	if (stc.fd_file1 < 0 || stc.fd_file2 < 0)
+//		return (clean(&stc, 30, 0));
 	multi_fork(stc, ac, envp);
 	write(2, "end fork\n", 9);
 	clean(&stc, 30, 0);
