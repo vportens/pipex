@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 07:26:01 by user42           ###   ########.fr       */
+/*   Updated: 2021/08/29 23:12:35 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,13 @@ int	multi_fork(t_pipe stc, int ac, char **envp)
 			return (clean(&stc, 40, 0));
 		if (pid[i] == 0)
 			ft_execve(stc, tmp, envp);
+		close(stc.first->fd_in);
+		close(stc.first->fd_out);
 		stc.first = stc.first->next;
 		i++;
 	}
 	stc.first = tmp;
-//	wait_for_pid(0, ac, pid, stc.first);
+	wait_for_pid(0, ac, pid, stc.first);
 	write(2, "end_pid\n", 8);
 	close_fd(tmp);
 	stc.first = tmp;
