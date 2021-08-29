@@ -6,10 +6,11 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/23 20:53:08 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 23:12:35 by victor           ###   ########.fr       */
+/*   Updated: 2021/08/30 00:29:20 by victor           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft/includes/libft.h"
 #include "pipex.h"
 
 int	clean_two(t_pipe *stc, int ret, t_cmd *tmp)
@@ -70,7 +71,7 @@ void	ft_execve(t_pipe stc, t_cmd *tmp, char **envp)
 	dup2(stc.first->fd_out, STDOUT_FILENO);
 	close_fd(tmp);
 	write(2, "la\n", 3);
-	if (stc.first->fd_in < 0)
+	if (stc.first->fd_in < 0 || stc.first->fd_out < 0)
 		exit(1);
 	execve(stc.first->bin, stc.first->arg, envp);
 	write(2, "pipex: command not found: ", ft_strlen("pipex: command not found: "));
@@ -122,7 +123,10 @@ int	main(int ac, char **av, char **envp)
 	stc.nfd = NULL;
 	ret = init_stc(&stc, ac, av, envp);
 	if (ret != 0)
+	{
+	//	write(2, ft_itoa(ret), ft_strlen(ft_itoa(ret)));
 		return (clean(&stc, ret, 0));
+	}
 	write(2, "end init\n", 9);
 	if (check_bin(&stc) == -1)
 		return (0);
