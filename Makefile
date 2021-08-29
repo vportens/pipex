@@ -12,7 +12,8 @@ FLAGS 	= -Wall -Wextra  #-framework OpenGL -framework AppKit libft.a -glldb
  
 SRCS =  	path_env.c							\
 			init_cmd.c							\
-			main_test_start.c					
+			main_test_start.c					\
+			utils.c
 
 SRCS_BONUS =	 
 

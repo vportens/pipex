@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/27 09:39:40 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/28 22:48:15 by viporten         ###   ########.fr       */
+/*   Updated: 2021/08/29 05:46:45 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,5 @@ int		check_bin(t_pipe *stc);
 int		init_fd_file(t_pipe *stc, int ac, char **av);
 int		init_multi_fd(t_pipe *stc, int ac, char **av);
 void	close_fd(t_cmd *first);
+void	wait_for_pid(int i, int ac, pid_t *pid, t_cmd *tmp);
 #endif
