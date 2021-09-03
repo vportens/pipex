@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/29 04:54:14 by user42            #+#    #+#             */
-/*   Updated: 2021/08/29 22:48:20 by victor           ###   ########.fr       */
+/*   Updated: 2021/09/03 21:23:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,28 @@ int	check_bin(t_pipe *stc)
 	return (0);
 }
 
+void	forking(t_pipe stc, char **envp, t_cmd *tmp, pid_t *pid)
+{
+	int	i;
+
+	i = 0;
+	while (i < stc.ac - 3)
+	{
+		pid[i] = fork();
+		if (pid[i] == -1)
+		{
+			clean(&stc, 40, 0);
+			exit(1);
+		}
+		if (pid[i] == 0)
+			ft_execve(stc, tmp, envp);
+		close(stc.first->fd_in);
+		close(stc.first->fd_out);
+		stc.first = stc.first->next;
+		i++;
+	}
+}
+
 void	close_fd(t_cmd *first)
 {
 	while (first)
@@ -39,24 +61,11 @@ void	close_fd(t_cmd *first)
 
 void	wait_for_pid(int i, int ac, pid_t *pid, t_cmd *tmp)
 {	
-	char *nbr;
-
 	i = 0;
 	while (i < ac - 3)
 	{
-	//	write(2, "before\n", 7);
-	//	if (tmp->bin == tmp->arg[0])
-	//		i++;
-	//	else
-	//	{
-			write(2, tmp->bin, ft_strlen(tmp->bin));
-			nbr = ft_itoa(pid[i]);
-			write(2, nbr, ft_strlen(nbr));
-			write(2, "\n", 1);
-			waitpid(pid[i], NULL, 0);
-			write(2, "ici2\n", 5);
-			i++;
-	//	}
+		waitpid(pid[i], NULL, 0);
+		i++;
 		tmp = tmp->next;
 	}
 	free(pid);

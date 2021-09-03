@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 22:17:31 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 23:28:56 by victor           ###   ########.fr       */
+/*   Updated: 2021/09/03 21:00:29 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int	init_fd_file(t_pipe *stc, int ac, char **av)
 	stc->fd_file2 = open(av[ac - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (stc->fd_file1 < 0)
 	{
-		write(2, "pipex: aucun fichier ou dossier de ce type: ", ft_strlen("pipex: aucun fichier ou dossier de ce type: "));
+		write(2, "pipex: aucun fichier ou dossier de ce type: ",
+			ft_strlen("pipex: aucun fichier ou dossier de ce type: "));
 		write(2, av[1], ft_strlen(av[1]));
 		write(2, "\n", 1);
 	}
@@ -66,9 +67,16 @@ int	init_fd_file(t_pipe *stc, int ac, char **av)
 
 void	init_cmd(t_pipe *stc, t_cmd *tmp, char **av, int i)
 {
+	int	j;
+
 	tmp->arg = ft_strsplit(av[i], ' ');
 	tmp->cmd = tmp->arg[0];
-	tmp->bin = path_cmd(stc->path, tmp->cmd);
+	j = ft_strlen(tmp->cmd);
+	if ((j > 1 && tmp->cmd[0] == '/') || (j > 2 && tmp->cmd[0] == '.'
+			&& tmp->cmd[1] == '/'))
+		tmp->bin = tmp->cmd;
+	else
+		tmp->bin = path_cmd(stc->path, tmp->cmd);
 	tmp->next = NULL;
 }
 

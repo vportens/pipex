@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 17:36:21 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 05:45:09 by user42           ###   ########.fr       */
+/*   Updated: 2021/09/03 20:14:08 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ char	*path_cmd(char **path, char *str)
 			free(tmp);
 		i++;
 	}
-	write(2, "pipex: command not found: ", ft_strlen("pipex: command not found: "));
-	write(2, str, ft_strlen(str));
-	write(2, "\n", 1);
 	return (str);
 }
 

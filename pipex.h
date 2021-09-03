@@ -6,7 +6,7 @@
 /*   By: viporten <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/27 09:39:40 by viporten          #+#    #+#             */
-/*   Updated: 2021/08/29 05:46:45 by user42           ###   ########.fr       */
+/*   Updated: 2021/09/03 21:22:58 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,8 @@ int		init_fd_file(t_pipe *stc, int ac, char **av);
 int		init_multi_fd(t_pipe *stc, int ac, char **av);
 void	close_fd(t_cmd *first);
 void	wait_for_pid(int i, int ac, pid_t *pid, t_cmd *tmp);
+int		clean_two(t_pipe *stc, int ret, t_cmd *tmp);
+int		clean(t_pipe *stc, int ret, int i);
+void	ft_execve(t_pipe stc, t_cmd *tmp, char **envp);
+void	forking(t_pipe stc, char **envp, t_cmd *tmp, pid_t *pid);
 #endif

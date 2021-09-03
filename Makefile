@@ -1,6 +1,6 @@
 NAME = pipex
 
-NAME_B = 
+NAME_B = pipex_bonus
 
 MAC = 
 
@@ -8,14 +8,18 @@ MAC_B =
 
 LIBFT = libft
 
-FLAGS 	= -Wall -Wextra  #-framework OpenGL -framework AppKit libft.a -glldb
+FLAGS 	= -Wall -Wextra -Werror
  
 SRCS =  	path_env.c							\
 			init_cmd.c							\
-			main_test_start.c					\
+			main.c								\
 			utils.c
 
-SRCS_BONUS =	 
+SRCS_BONUS =	path_env.c							\
+				init_cmd.c							\
+				main_bonus.c						\
+				utils.c
+ 
 
 CC 		= gcc
 OBJ 	= ${SRCS:.c=.o}
