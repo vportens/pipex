@@ -10,15 +10,15 @@ LIBFT = libft
 
 FLAGS 	= -Wall -Wextra -Werror
  
-SRCS =  	path_env.c							\
-			init_cmd.c							\
-			main.c								\
-			utils.c
+SRCS =  	srcs/path_env.c							\
+			srcs/init_cmd.c							\
+			srcs/main.c								\
+			srcs/utils.c
 
-SRCS_BONUS =	path_env.c							\
-				init_cmd.c							\
-				main_bonus.c						\
-				utils.c
+SRCS_BONUS =	srcs/path_env.c							\
+				srcs/init_cmd.c							\
+				srcs/main_bonus.c						\
+				srcs/utils.c
  
 
 CC 		= gcc
