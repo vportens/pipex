@@ -1,8 +1,13 @@
 # pipex
-Ce projet à pour objectif l'introduction aux forks,
-L'introduction à l'exceve et la gestion des commandes.
+ 
+### Suject : pipex.subject.pdf
 
-Pour lancer le projet :
+## Objectif : 
+- l'introduction aux forks
+- l'introduction à l'exceve
+- la gestion des commandes telque bash le gere.
+
+## Pour lancer le projet :
 make
 ./pipex file1 cmd1 cmd2 file2 <=> file1 cmd1 | cmd2 > file2
 
